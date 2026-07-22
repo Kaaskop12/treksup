@@ -24,8 +24,8 @@ export default function RouteDetailPage() {
   }
 
   function onFavorite() {
-    const next = toggleFavorite(route.id);
-    setIsFavorite(next.includes(route.id));
+    const next = toggleFavorite(route!.id);
+    setIsFavorite(next.includes(route!.id));
   }
 
   return (
