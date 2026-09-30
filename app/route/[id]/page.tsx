@@ -8,6 +8,7 @@ import { getFavorites, toggleFavorite } from '@/lib/storage';
 import ElevationChart from '@/components/ElevationChart';
 import PackingList from '@/components/PackingList';
 import AIAssistant from '@/components/AIAssistant';
+import WaitlistForm from '@/components/WaitlistForm';
 
 export default function RouteDetailPage() {
   const params = useParams<{ id: string }>();
@@ -80,10 +81,34 @@ export default function RouteDetailPage() {
           <button className="flex-[1.4] bg-forest text-white font-bold text-[15px] rounded-full py-4">
             Start planning
           </button>
-          <button className="flex-1 glass text-forest font-bold text-[14px] rounded-full py-4">
-            Download GPX
-          </button>
+          {route.gpxUrl ? (
+            <a
+              href={route.gpxUrl}
+              download={`${route.id}.gpx`}
+              className="flex-1 glass text-forest font-bold text-[14px] rounded-full py-4 text-center"
+            >
+              Download GPX
+            </a>
+          ) : (
+            <a
+              href="#gpx-waitlist"
+              className="flex-1 glass text-forest font-bold text-[14px] rounded-full py-4 text-center"
+            >
+              GPX coming soon
+            </a>
+          )}
         </div>
+
+        {!route.gpxUrl && (
+          <div id="gpx-waitlist" className="mb-7 scroll-mt-4">
+            <WaitlistForm
+              routeId={route.id}
+              source="route-gpx"
+              title="Get the GPX for this route"
+              blurb="We're verifying the track. Leave your email and we'll send it the moment it's ready."
+            />
+          </div>
+        )}
 
         <Section title="Elevation profile">
           <ElevationChart ascentM={route.ascentM} descentM={route.descentM} />

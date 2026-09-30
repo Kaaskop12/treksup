@@ -59,3 +59,20 @@ Alternative: [Netlify](https://netlify.com) works the same way for Next.js apps.
    exactly where that call would slot in
 4. Add a payments provider (Stripe) for the premium subscription tier
 5. Wire up a weather API and a real map (Mapbox has a generous free tier)
+
+## Waitlist (email capture)
+
+Visitors can leave their email on the home page and per route ("GPX coming soon").
+Rows go to the Supabase `waitlist` table (`supabase/migrations/20260930120000_waitlist.sql`,
+already applied to the Treksup project). Anonymous users can only INSERT; read the list in the
+Supabase dashboard. Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+(see `.env.example`) locally and in Vercel, or signup shows "not configured".
+
+## GPX
+
+Add a real, verified track at `public/gpx/<route-id>.gpx` and set `gpxUrl: '/gpx/<route-id>.gpx'`
+on the route in `lib/routes.ts`. The button switches from "GPX coming soon" to a download.
+
+## Tests
+
+`npm test` (vitest), `npm run typecheck`.

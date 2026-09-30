@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { routes } from '@/lib/routes';
 import { getFavorites, toggleFavorite } from '@/lib/storage';
 import RouteCard from '@/components/RouteCard';
+import WaitlistForm from '@/components/WaitlistForm';
 
 const filters = ['All', 'Easy', 'Moderate', 'Hard'];
 
@@ -82,6 +83,14 @@ export default function DiscoverPage() {
               No routes match that search yet.
             </p>
           )}
+        </div>
+        <div className="mt-6">
+          <WaitlistForm
+            source="home"
+            title="Be first to know"
+            blurb="GPX downloads, more routes and hut booking are coming. Get one email when they land."
+            cta="Join"
+          />
         </div>
       </div>
     </div>

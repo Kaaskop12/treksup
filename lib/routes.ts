@@ -15,6 +15,8 @@ export type Route = {
   hero: string;
   thumb: string;
   summary: string;
+  /** Path under /public to a real GPX file, e.g. '/gpx/alta-via-1.gpx'. Leave unset until a verified track exists. */
+  gpxUrl?: string;
   huts: { name: string; night: number; pricePerNight: number; image: string }[];
   transport: { label: string; detail: string }[];
   packingList: PackItem[];
