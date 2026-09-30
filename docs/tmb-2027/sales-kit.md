@@ -4,7 +4,7 @@ Product (Stripe, sandbox): **"TMB 2027 booking plan"**, EUR 29 one-time. Its Str
 "Digital guide: Tour du Mont Blanc 2027 hut opening dates, booking order, fallback huts per stage, reminder
 calendar. We book nothing for you."
 
-The plan itself lives on Sebbe's PC. Every line marked **[confirm]** must be checked against the real plan
+The plan itself lives on the owner's machine. Every line marked **[confirm]** must be checked against the real plan
 before publishing. Everything else is either sourced (links in §5) or plain product description.
 
 ## 1. Sales page copy (for treksup.com/tmb-2027)
@@ -67,7 +67,7 @@ Questions: [contact email]."
 
 Ends with: "Want the full order and fallbacks per stage? The TMB 2027 booking plan, EUR 29."
 
-## 4. Distribution drafts (Sebbe posts from his own accounts, where group rules allow)
+## 4. Distribution drafts (the owner posts from their own accounts, where group rules allow)
 
 **Community answer** (Reddit r/TourDuMontBlanc or TMB Facebook groups; check the self-promotion rules first):
 > Booking for 2027 opens 15 Oct on the Mon Tour du Mont-Blanc platform. What I'd do: make the account now, pick
@@ -99,7 +99,7 @@ proxy blocks these sites. **Re-check each one on the live page before publishing
 | S10 | Alta Via 1 rifugi are booked individually | https://www.moonhoneytravel.com/alta-via-1-rifugios-booking/ | snippet |
 | S11 | Cancelling more than 30 days before the stay refunds 80% of the deposit | https://www.montourdumontblanc.com/en/faqs | snippet |
 
-## 6. Before this goes live (owner: Sebbe unless noted)
+## 6. Before this goes live (owner tasks unless noted)
 
 - [ ] Stripe live account active. The Payment Link is recreated in live mode, with the redirect set to the public plan
       URL (not localhost) and the terms checkbox on.
