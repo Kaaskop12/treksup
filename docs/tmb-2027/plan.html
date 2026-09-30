@@ -1,0 +1,106 @@
+<!doctype html>
+<!-- Sales page for the TMB 2027 booking plan. Standalone: drop on treksup.com as /tmb-2027.
+     Copy comes from sales-kit.md sections 1-2. Before publishing:
+       1. Resolve every element with class "confirm" (check it against the real plan), then delete the draft banner.
+       2. Replace {PAYMENT_LINK} with the LIVE Stripe Payment Link (terms checkbox on).
+       3. Replace {CONTACT_EMAIL}. Remove the noindex meta tag. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>TMB 2027 booking plan: know what to book first | Treksup</title>
+<meta name="description" content="Tour du Mont Blanc 2027 refuge bookings open on 15 October 2026. A booking plan for independent hikers: booking order, fallbacks per stage, reminder calendar. EUR 29.">
+<style>
+  :root { --ink:#20241F; --soft:#5B6058; --forest:#1E3A2B; --paper:#FBF9F4; --bg:#F7F3EA; --warn:#8a5a00; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: 32px 16px 48px; }
+  h1 { font-size: 30px; line-height: 1.15; margin: 0 0 10px; color: var(--forest); }
+  h2 { font-size: 19px; margin: 32px 0 10px; color: var(--forest); }
+  .lead { color: var(--soft); margin: 0 0 20px; }
+  .card { background: var(--paper); border-radius: 16px; padding: 16px 18px; margin: 0 0 12px; box-shadow: 0 8px 24px -18px rgba(20,35,25,.4); }
+  ul { margin: 0; padding-left: 20px; }
+  li { margin: 0 0 6px; }
+  sup a { color: var(--soft); text-decoration: none; font-size: 12px; }
+  .buy { display: block; text-align: center; background: var(--forest); color: #fff; font-weight: 700; font-size: 17px; padding: 16px; border-radius: 999px; text-decoration: none; margin: 20px 0 8px; }
+  .small { font-size: 13px; color: var(--soft); }
+  .confirm { outline: 2px dashed var(--warn); outline-offset: 2px; }
+  .draft { background: #fff4d6; color: var(--warn); border-radius: 12px; padding: 12px 14px; font-size: 14px; margin-bottom: 20px; }
+  details { background: var(--paper); border-radius: 14px; padding: 12px 16px; margin: 0 0 8px; }
+  summary { font-weight: 700; cursor: pointer; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  td { padding: 6px 4px; border-bottom: 1px solid rgba(30,58,43,.1); vertical-align: top; }
+  .sources li { font-size: 13px; color: var(--soft); word-break: break-word; }
+</style>
+</head>
+<body>
+<main>
+  <div class="draft">DRAFT, not for publishing. Items with a dashed outline must be checked against the real plan first.</div>
+
+  <h1>TMB 2027 bookings open on 15 October. Know exactly what to book first.</h1>
+  <p class="lead">A booking plan for independent hikers: which nights to lock in first, what to do when a refuge is full,
+    and reminders so you don't miss the windows. EUR 29, once. We don't book for you; you stay in control.</p>
+
+  <a class="buy" href="{PAYMENT_LINK}">Get the booking plan (EUR 29)</a>
+  <p class="small" style="text-align:center">One-time payment. <span class="confirm">Instant access after payment.</span></p>
+
+  <h2>Why now</h2>
+  <div class="card"><ul>
+    <li>Refuges in the Mon Tour du Mont-Blanc network open their 2027 bookings on <strong>15 October 2026</strong>.<sup><a href="#s1">[1]</a></sup></li>
+    <li>Some nights have very few beds, such as around Les Chapieux and Trient. Missing them can mean a bus or taxi off the trail.<sup><a href="#s3">[3]</a></sup></li>
+    <li>Not every refuge is on the central platform. Some only take email or their own forms.<sup><a href="#s4">[4]</a></sup></li>
+    <li>From spring 2027, walking the French section continuously without a reservation is set to end (agreed in principle in September 2026).<sup><a href="#s5">[2]</a></sup></li>
+  </ul></div>
+
+  <h2>What's in the plan</h2>
+  <div class="card confirm"><ul>
+    <li>The order to book in: bottleneck nights first, then the flexible ones.</li>
+    <li>A fallback for every stage, for when your first choice is full.</li>
+    <li>Opening dates for refuges that aren't on the central platform.</li>
+    <li>A reminder calendar: booking day, deposit and cancellation deadlines.</li>
+  </ul></div>
+
+  <h2>What it is not</h2>
+  <div class="card"><ul>
+    <li>Not a booking service or a tour.</li>
+    <li>No guarantee of beds.</li>
+    <li>Not a replacement for checking the official refuge sites.</li>
+  </ul></div>
+
+  <h2>How it compares</h2>
+  <div class="card"><table>
+    <tr><td>Free itinerary planners</td><td>Fine for splitting stages<sup><a href="#s6">[6]</a></sup></td></tr>
+    <tr><td>DIY planners with live availability</td><td>From about EUR 20<sup><a href="#s7">[7]</a></sup></td></tr>
+    <tr><td>Planning packages and 1:1 consultations</td><td>EUR 79 to 200<sup><a href="#s8">[8]</a></sup></td></tr>
+    <tr><td><strong>This plan</strong></td><td><strong>EUR 29</strong>, for the booking-day part, the part people get wrong</td></tr>
+  </table></div>
+
+  <h2>Questions</h2>
+  <details><summary>Do you book refuges for me?</summary>No. You book directly with the refuges. The plan tells you what to book, in which order, and what to do if it's full.</details>
+  <details><summary>Is this official?</summary>No. Treksup is independent and not affiliated with Mon Tour du Mont-Blanc or any refuge.</details>
+  <details class="confirm"><summary>What if the 2027 rules change?</summary>The plan reflects what was published on [date]. [Do buyers get updates?]</details>
+  <details class="confirm"><summary>Can I get a refund?</summary>[Decide the refund wording.] EU consumers have a 14-day withdrawal right unless they expressly agree to immediate access to digital content and acknowledge losing that right; the checkout asks for that agreement.<sup><a href="#s9">[9]</a></sup></details>
+  <details class="confirm"><summary>Which direction and stages?</summary>[What the plan covers: direction, start point, number of stages.]</details>
+  <details><summary>I'm walking Alta Via 1 or the GR20.</summary>Not covered. Alta Via 1 huts are booked one by one, each with its own opening date.<sup><a href="#s10">[10]</a></sup></details>
+
+  <a class="buy" href="{PAYMENT_LINK}">Get the booking plan (EUR 29)</a>
+  <p class="small" style="text-align:center">Not ready to buy? <a href="/tmb-2027/checklist">Get the free 15 October checklist</a>.</p>
+
+  <p class="small">Sold by Treksup, Belgium, company no. 1029.205.038. Questions: <span class="confirm">{CONTACT_EMAIL}</span>.</p>
+
+  <h2 class="small">Sources</h2>
+  <ol class="sources">
+    <li id="s1">Mon Tour du Mont-Blanc: when refuge bookings open. https://www2.montourdumontblanc.com/en/actualites/when-refuge-bookings-open-for-the-season</li>
+    <li id="s5">Tourisme Haute-Savoie: soon impossible to leave without a reservation. https://www.tourisme-haute-savoie.com/en/news-from-haute-savoie/tour-du-mont-blanc-soon-impossible-to-leave-without-a-reservation/</li>
+    <li id="s3">TMB Trail Guide: refuge guide. https://tmbtrailguide.com/refuge-guide/</li>
+    <li id="s4">Camdewoods: TMB refuges, how to book. https://camdewoods.com/en/tour-du-mont-blanc-refuges/</li>
+    <li value="6" id="s6">openair.tools: TMB itinerary planners. https://openair.tools/itinerary-planners/tour-du-mont-blanc</li>
+    <li id="s7">Take a Hike: hike planner. https://takeahike.io/blog/we-built-the-hike-planner-we-wish-wed-had/</li>
+    <li id="s8">The Hiking Club TMB expert; Alpine Consultants. https://www.thehiking.club/products/all-hikes/tour-du-mont-blanc-expert ; https://alpineconsultants.carrd.co/</li>
+    <li id="s9">Stripe: Payment Links customisation (terms checkbox). https://docs.stripe.com/payment-links/customize</li>
+    <li id="s10">Moon &amp; Honey Travel: Alta Via 1 rifugio booking. https://www.moonhoneytravel.com/alta-via-1-rifugios-booking/</li>
+  </ol>
+</main>
+</body>
+</html>
