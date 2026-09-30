@@ -8,18 +8,23 @@ import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const RULES = [
-  { id: 'hardcoded-rating', re: /\brating\s*:\s*\d/, why: 'hard-coded rating; ratings must come from real reviews' },
-  { id: 'hardcoded-review-count', re: /\breviewCount\s*:\s*\d/, why: 'hard-coded review count' },
-  { id: 'hardcoded-reviews', re: /\breviews\s*:\s*\[\s*\{/g, multiline: true, why: 'hard-coded review list; reviews must come from real users' },
-  { id: 'star-string', re: /★★★★★/, why: 'hard-coded five-star display' },
-  { id: 'invented-count', re: /\b\d[\d,.]*\+?\s*(hikers|walkers|users|customers|downloads|members)\b/i, why: 'user/customer count without a source' },
+  { id: 'hardcoded-rating', re: /\b\w*rating['"]?\s*[:=]\s*\{?\s*['"]?\d/i, why: 'hard-coded rating; ratings must come from real reviews' },
+  { id: 'hardcoded-review-count', re: /\b\w*reviews?count['"]?\s*[:=]\s*\{?\s*['"]?\d/i, why: 'hard-coded review count' },
+  { id: 'hardcoded-reviews', re: /\b(reviews|testimonials)['"]?\s*[:=]\s*\[\s*\{/gi, multiline: true, why: 'hard-coded review list; reviews must come from real users' },
+  { id: 'star-string', re: /[★☆]{3,}|['"]★['"]\s*\.repeat/, why: 'hard-coded star rating display' },
+  {
+    id: 'invented-count',
+    // Years ("2027 bookings open") are not counts.
+    re: /\b(?!(?:19|20)\d\d\b)\d[\d,.]*\s*(k\+?|\+)?\s*(?:[a-z-]+\s+){0,2}(hikers|walkers|trekkers|users|customers|downloads|members|subscribers|buyers|bookings|reviews)\b/i,
+    why: 'user/customer count without a source'
+  },
   { id: 'ai-capability-claim', re: /\btrained on\b/i, why: 'claims AI training the product does not have' }
 ];
 
 const SUPPRESS = /credibility-ok:\s*\S/;
 
-/** Returns [{ line, rule, why, text }] for one file's source text. */
-export function scanSource(text) {
+/** Returns [{ line, rule, why, text }] for one file's source text. Markdown skips the button check. */
+export function scanSource(text, { markdown = false } = {}) {
   const lines = text.split('\n');
   const suppressed = (lineNo) => SUPPRESS.test(lines[lineNo - 1]) || (lineNo > 1 && SUPPRESS.test(lines[lineNo - 2]));
   const lineOf = (index) => text.slice(0, index).split('\n').length;
@@ -36,6 +41,7 @@ export function scanSource(text) {
       if (!suppressed(lineNo)) findings.push({ line: lineNo, rule: rule.id, why: rule.why, text: lines[lineNo - 1].trim() });
     }
   }
+  if (markdown) return findings;
   // A <button> with no onClick, no type="submit" and not disabled does nothing when tapped.
   for (const m of text.matchAll(/<button\b([^>]*)>/g)) {
     if (/onClick|type=["']submit["']|disabled/.test(m[1])) continue;
@@ -45,12 +51,15 @@ export function scanSource(text) {
   return findings;
 }
 
-const SCAN_DIRS = ['app', 'components', 'lib'];
-const EXT = /\.(ts|tsx|js|jsx)$/;
+// User-facing code and the copy that will be published (sales pages, drafts in docs/).
+const SCAN_DIRS = ['app', 'components', 'lib', 'src', 'pages', 'docs', 'public'];
+const EXT = /\.(ts|tsx|js|jsx|md|mdx|html)$/;
 const SKIP = /\.(test|spec)\.[jt]sx?$/;
+const SKIP_DIRS = new Set(['node_modules', '.next', '.git', 'dist', 'build']);
 
 function walk(dir, out) {
   for (const name of readdirSync(dir)) {
+    if (SKIP_DIRS.has(name)) continue;
     const p = join(dir, name);
     if (statSync(p).isDirectory()) walk(p, out);
     else if (EXT.test(name) && !SKIP.test(name)) out.push(p);
@@ -58,6 +67,7 @@ function walk(dir, out) {
   return out;
 }
 
+/** Scans the user-facing folders of a repo (or any other project, e.g. the treksup.com site). */
 export function scanRepo(root) {
   const files = SCAN_DIRS.flatMap((d) => {
     try {
@@ -67,13 +77,14 @@ export function scanRepo(root) {
     }
   });
   const findings = files.flatMap((f) =>
-    scanSource(readFileSync(f, 'utf8')).map((x) => ({ file: relative(root, f), ...x }))
+    scanSource(readFileSync(f, 'utf8'), { markdown: /\.mdx?$/.test(f) }).map((x) => ({ file: relative(root, f), ...x }))
   );
   return { files: files.length, findings };
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const root = join(fileURLToPath(new URL('.', import.meta.url)), '..');
+  // Usage: node scripts/check-credibility.mjs [project-root]   (defaults to this repo)
+  const root = process.argv[2] || join(fileURLToPath(new URL('.', import.meta.url)), '..');
   const { files, findings } = scanRepo(root);
   for (const f of findings) console.log(`ERROR credibility ${f.file}:${f.line} [${f.rule}] ${f.why} :: ${f.text.slice(0, 120)}`);
   if (findings.length) {

@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
-# PreToolUse hook (Bash, if "git commit *"): block the commit when the fast checks fail.
-# Exit 2 = block, stderr is shown to Claude as the reason. Anything else lets the commit through.
+# PreToolUse hook (Bash): block `git commit` when the fast checks fail.
+# Exit 2 = block, stderr is shown to Claude as the reason. Anything else lets the command through.
 input=$(cat 2> /dev/null || true)
-cmd=$(printf '%s' "$input" | jq -r '.tool_input.command // ""' 2> /dev/null)
-# Defensive: only gate real commits even if the hook's "if" filter is ignored by an older version.
-case "$cmd" in *"git commit"*) ;; *) exit 0 ;; esac
+# Parse with node (always present in this repo) so a missing jq can't silently open the gate.
+cmd=$(printf '%s' "$input" | node -e 'let s="";process.stdin.on("data",c=>s+=c).on("end",()=>{try{process.stdout.write(String(JSON.parse(s).tool_input.command||""))}catch{process.stdout.write(s)}})' 2> /dev/null || printf '%s' "$input")
+
+# Any git commit, including `git -C <dir> commit` and commits chained after other commands.
+if ! grep -qE '(^|[;&|[:space:]])git([[:space:]]+-[cC][[:space:]]+[^[:space:]]+)*[[:space:]]+commit([[:space:]]|$)' <<< "$cmd"; then
+  exit 0
+fi
 
 cd "${CLAUDE_PROJECT_DIR:-$(dirname "$0")/..}" || exit 0
 if out=$(bash scripts/verify.sh --fast 2>&1); then
