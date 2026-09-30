@@ -1,13 +1,15 @@
+import { formatNumber } from '@/lib/format';
+
 export default function ElevationChart({ ascentM, descentM }: { ascentM: number; descentM: number }) {
   return (
     <div className="rounded-xl2 p-5 pb-3.5 shadow-card text-white" style={{ background: 'linear-gradient(165deg,#1E3A2B 0%, #142A1F 100%)' }}>
       <div className="flex justify-between mb-1">
         <div>
-          <p className="text-2xl font-extrabold">{ascentM.toLocaleString()} m</p>
+          <p className="text-2xl font-extrabold">{formatNumber(ascentM)} m</p>
           <p className="text-[10.5px] opacity-65 font-semibold uppercase tracking-wide mt-0.5">Total ascent</p>
         </div>
         <div className="text-right">
-          <p className="text-2xl font-extrabold">{descentM.toLocaleString()} m</p>
+          <p className="text-2xl font-extrabold">{formatNumber(descentM)} m</p>
           <p className="text-[10.5px] opacity-65 font-semibold uppercase tracking-wide mt-0.5">Total descent</p>
         </div>
       </div>
@@ -30,6 +32,7 @@ export default function ElevationChart({ ascentM, descentM }: { ascentM: number;
           strokeLinecap="round"
         />
       </svg>
+      <p className="text-[10px] opacity-55 font-medium mt-1">Profile shape is illustrative; totals come from the route brief.</p>
     </div>
   );
 }

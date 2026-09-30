@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Route } from '@/lib/routes';
+import { formatNumber } from '@/lib/format';
 
 type Message = { who: 'bot' | 'user'; text: string };
 
@@ -11,19 +12,19 @@ function answerFor(route: Route, question: string): string {
     return `For ${route.name}, the key items are: ${route.packingList
       .slice(0, 4)
       .map((i) => i.label.toLowerCase())
-      .join(', ')}. Huts along the route can often rent technical gear if you'd rather not carry it.`;
+      .join(', ')}.`;
   }
   if (q.includes('safe') || q.includes('height') || q.includes('difficult') || q.includes('beginner')) {
-    return `This route is rated ${route.difficulty}. With ${route.ascentM.toLocaleString()} m of ascent over ${route.days} day(s), pace yourself on the first day and check the reviews below for section-specific warnings from other hikers.`;
+    return `This route is rated ${route.difficulty}. With ${formatNumber(route.ascentM)} m of ascent over ${route.days} day(s), pace yourself on the first day and check official notices for closures before you set off.`;
   }
   if (q.includes('weather') || q.includes('rain') || q.includes('snow')) {
     return `Live weather isn't wired up in this MVP yet, but the packing list already accounts for typical conditions on ${route.name}. A real deployment would pull this from a weather API using the route's coordinates.`;
   }
   if (q.includes('sleep') || q.includes('hut') || q.includes('camp')) {
     return route.huts.length
-      ? `There are ${route.huts.length} huts listed for this route, starting at €${Math.min(
+      ? `There are ${route.huts.length} huts listed for this route, from about €${Math.min(
           ...route.huts.map((h) => h.pricePerNight)
-        )}/night. Book ahead in peak season, they fill up fast.`
+        )}/night (indicative, check with the hut). Book ahead in peak season.`
       : `This is a day route, so no huts are listed — check the transport section for getting back before dark.`;
   }
   return `Good question about ${route.name}. Ask me about gear, safety, weather, or where to sleep and I'll get specific.`;
@@ -54,7 +55,7 @@ export default function AIAssistant({ route }: { route: Route }) {
         <span>
           <span className="block text-[15px] font-extrabold text-white">Trek Assistant</span>
           <span className="block text-[12px] text-white/60 font-medium">
-            {open ? 'Tap to close' : "Trained on this route's terrain and weather"}
+            {open ? 'Tap to close' : 'Quick answers from the route brief'}
           </span>
         </span>
       </button>

@@ -1,12 +1,18 @@
 export type PackItem = { id: string; label: string };
 
+export type RouteGuide = {
+  /** Stable id, also used for tracking labels and the payment-link env var. */
+  id: string;
+  name: string;
+  priceEur: number;
+  bullets: string[];
+};
+
 export type Route = {
   id: string;
   name: string;
   country: string;
   eyebrow: string;
-  rating: number;
-  reviewCount: number;
   distanceKm: number;
   ascentM: number;
   descentM: number;
@@ -15,10 +21,13 @@ export type Route = {
   hero: string;
   thumb: string;
   summary: string;
+  /** Path under /public to a real GPX file, e.g. '/gpx/alta-via-1.gpx'. Leave unset until a verified track exists. */
+  gpxUrl?: string;
   huts: { name: string; night: number; pricePerNight: number; image: string }[];
   transport: { label: string; detail: string }[];
   packingList: PackItem[];
-  reviews: { name: string; date: string; rating: number; text: string }[];
+  /** Paid digital product for this route (willingness-to-pay test). */
+  guide?: RouteGuide;
 };
 
 export const routes: Route[] = [
@@ -27,16 +36,14 @@ export const routes: Route[] = [
     name: 'Alta Via 1 Ridge Traverse',
     country: 'Italy',
     eyebrow: 'Curated route · Dolomites',
-    rating: 4.9,
-    reviewCount: 2140,
-    distanceKm: 62,
-    ascentM: 3240,
-    descentM: 2110,
-    difficulty: 'Hard',
-    days: 6,
+    distanceKm: 120,
+    ascentM: 7300,
+    descentM: 8300,
+    difficulty: 'Moderate',
+    days: 11,
     hero: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1200&q=80',
     thumb: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=400&q=80',
-    summary: 'A six-day ridge traverse through the Dolomites, hut to hut, with one exposed via ferrata section on day 3.',
+    summary: 'The classic hut-to-hut traverse of the Dolomites, from Lago di Braies to Belluno, usually walked in 9 to 12 days. Via ferrata sections are optional variants.',
     huts: [
       { name: 'Rifugio Lagazuoi', night: 1, pricePerNight: 48, image: 'https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?auto=format&fit=crop&w=500&q=80' },
       { name: 'Rifugio Averau', night: 2, pricePerNight: 52, image: 'https://images.unsplash.com/photo-1517824806704-9040b037703b?auto=format&fit=crop&w=500&q=80' }
@@ -49,14 +56,10 @@ export const routes: Route[] = [
     packingList: [
       { id: 'boots', label: 'Waterproof hiking boots' },
       { id: 'pack', label: '40L trekking backpack' },
-      { id: 'ferrata', label: 'Via ferrata kit (harness, lanyard, helmet)' },
+      { id: 'ferrata', label: 'Via ferrata kit (only for the optional variants)' },
       { id: 'down', label: 'Insulated down layer' },
       { id: 'rain', label: 'Rain jacket' },
       { id: 'poles', label: 'Trekking poles' }
-    ],
-    reviews: [
-      { name: 'Marta H.', date: 'June 2026', rating: 5, text: "The Lagazuoi sunrise made every climbing step worth it. Book huts early, they fill fast in summer." },
-      { name: 'Dario F.', date: 'August 2025', rating: 5, text: "Harder than expected on day 3. Bring poles for the descents." }
     ]
   },
   {
@@ -64,8 +67,6 @@ export const routes: Route[] = [
     name: 'Tour du Mont Blanc',
     country: 'France / Italy / Switzerland',
     eyebrow: 'Curated route · Mont Blanc massif',
-    rating: 4.8,
-    reviewCount: 3860,
     distanceKm: 170,
     ascentM: 10000,
     descentM: 9800,
@@ -87,25 +88,32 @@ export const routes: Route[] = [
       { id: 'layers', label: 'Layering system for alpine weather' },
       { id: 'poles', label: 'Trekking poles' }
     ],
-    reviews: [
-      { name: 'Elke V.', date: 'July 2025', rating: 5, text: 'Book refuges months ahead for July/August. The scenery on day 4 is unreal.' }
-    ]
+    guide: {
+      id: 'tmb-2027-plan',
+      name: 'TMB 2027 booking plan',
+      priceEur: 29,
+      bullets: [
+        '2027 hut opening dates',
+        'The order to book huts in',
+        'Fallback huts for every stage',
+        'A reminder calendar for booking dates',
+        'We book nothing for you: you stay in control'
+      ]
+    }
   },
   {
     id: 'path-of-the-gods',
     name: 'Path of the Gods',
     country: 'Italy',
     eyebrow: 'Curated route · Amalfi Coast',
-    rating: 4.7,
-    reviewCount: 5220,
-    distanceKm: 13,
-    ascentM: 650,
-    descentM: 680,
-    difficulty: 'Easy',
+    distanceKm: 8,
+    ascentM: 150,
+    descentM: 370,
+    difficulty: 'Moderate',
     days: 1,
     hero: 'https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?auto=format&fit=crop&w=1200&q=80',
     thumb: 'https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?auto=format&fit=crop&w=400&q=80',
-    summary: 'A half-day coastal walk above the Amalfi Coast, easy enough for a first multi-hour hike.',
+    summary: 'A 3 to 4 hour clifftop walk from Bomerano to Nocelle above the Amalfi Coast, mostly downhill with a few short climbs.',
     huts: [],
     transport: [
       { label: 'Ferry or bus to Bomerano', detail: 'From Amalfi, about 1h' }
@@ -114,9 +122,6 @@ export const routes: Route[] = [
       { id: 'shoes', label: 'Trail runners or light hiking shoes' },
       { id: 'water', label: '1.5L water' },
       { id: 'sun', label: 'Sun hat and sunscreen' }
-    ],
-    reviews: [
-      { name: 'Noa P.', date: 'May 2026', rating: 5, text: 'Go early morning to beat the heat and the crowds. Worth every step.' }
     ]
   }
 ];
