@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import { joinWaitlist } from '@/lib/waitlist';
+import { track } from '@/lib/track';
+import Link from 'next/link';
+import Honeypot from '@/components/Honeypot';
 
 export default function WaitlistForm({
   routeId,
@@ -19,13 +22,19 @@ export default function WaitlistForm({
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'sending' | 'done'>('idle');
   const [error, setError] = useState('');
+  const [trap, setTrap] = useState('');
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStatus('sending');
     setError('');
+    if (trap) {
+      setStatus('done');
+      return;
+    }
     const result = await joinWaitlist({ email, routeId, source });
     if (result.ok) {
+      track('form_submit', `waitlist:${source}`);
       setStatus('done');
     } else {
       setStatus('idle');
@@ -40,7 +49,8 @@ export default function WaitlistForm({
       {status === 'done' ? (
         <p className="text-[13px] font-bold text-forest">You're on the list. We'll email you.</p>
       ) : (
-        <form onSubmit={onSubmit} className="flex gap-2">
+        <form onSubmit={onSubmit} className="flex gap-2 relative">
+          <Honeypot value={trap} onChange={setTrap} />
           <input
             type="email"
             required
@@ -60,6 +70,11 @@ export default function WaitlistForm({
         </form>
       )}
       {error && <p className="text-[12px] font-semibold text-red-700 mt-2">{error}</p>}
+      {status !== 'done' && (
+        <p className="text-[10.5px] text-inkSoft font-medium mt-2">
+          We only use your email for this. <Link href="/privacy" className="underline">Privacy</Link>
+        </p>
+      )}
     </div>
   );
 }

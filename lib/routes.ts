@@ -1,12 +1,18 @@
 export type PackItem = { id: string; label: string };
 
+export type RouteGuide = {
+  /** Stable id, also used for tracking labels and the payment-link env var. */
+  id: string;
+  name: string;
+  priceEur: number;
+  bullets: string[];
+};
+
 export type Route = {
   id: string;
   name: string;
   country: string;
   eyebrow: string;
-  rating: number;
-  reviewCount: number;
   distanceKm: number;
   ascentM: number;
   descentM: number;
@@ -20,7 +26,8 @@ export type Route = {
   huts: { name: string; night: number; pricePerNight: number; image: string }[];
   transport: { label: string; detail: string }[];
   packingList: PackItem[];
-  reviews: { name: string; date: string; rating: number; text: string }[];
+  /** Paid digital product for this route (willingness-to-pay test). */
+  guide?: RouteGuide;
 };
 
 export const routes: Route[] = [
@@ -29,8 +36,6 @@ export const routes: Route[] = [
     name: 'Alta Via 1 Ridge Traverse',
     country: 'Italy',
     eyebrow: 'Curated route · Dolomites',
-    rating: 4.9,
-    reviewCount: 2140,
     distanceKm: 62,
     ascentM: 3240,
     descentM: 2110,
@@ -55,10 +60,6 @@ export const routes: Route[] = [
       { id: 'down', label: 'Insulated down layer' },
       { id: 'rain', label: 'Rain jacket' },
       { id: 'poles', label: 'Trekking poles' }
-    ],
-    reviews: [
-      { name: 'Marta H.', date: 'June 2026', rating: 5, text: "The Lagazuoi sunrise made every climbing step worth it. Book huts early, they fill fast in summer." },
-      { name: 'Dario F.', date: 'August 2025', rating: 5, text: "Harder than expected on day 3. Bring poles for the descents." }
     ]
   },
   {
@@ -66,8 +67,6 @@ export const routes: Route[] = [
     name: 'Tour du Mont Blanc',
     country: 'France / Italy / Switzerland',
     eyebrow: 'Curated route · Mont Blanc massif',
-    rating: 4.8,
-    reviewCount: 3860,
     distanceKm: 170,
     ascentM: 10000,
     descentM: 9800,
@@ -89,17 +88,24 @@ export const routes: Route[] = [
       { id: 'layers', label: 'Layering system for alpine weather' },
       { id: 'poles', label: 'Trekking poles' }
     ],
-    reviews: [
-      { name: 'Elke V.', date: 'July 2025', rating: 5, text: 'Book refuges months ahead for July/August. The scenery on day 4 is unreal.' }
-    ]
+    guide: {
+      id: 'tmb-2027-plan',
+      name: 'TMB 2027 booking plan',
+      priceEur: 29,
+      bullets: [
+        '2027 hut opening dates',
+        'The order to book huts in',
+        'Fallback huts for every stage',
+        'A reminder calendar for booking dates',
+        'We book nothing for you: you stay in control'
+      ]
+    }
   },
   {
     id: 'path-of-the-gods',
     name: 'Path of the Gods',
     country: 'Italy',
     eyebrow: 'Curated route · Amalfi Coast',
-    rating: 4.7,
-    reviewCount: 5220,
     distanceKm: 13,
     ascentM: 650,
     descentM: 680,
@@ -116,9 +122,6 @@ export const routes: Route[] = [
       { id: 'shoes', label: 'Trail runners or light hiking shoes' },
       { id: 'water', label: '1.5L water' },
       { id: 'sun', label: 'Sun hat and sunscreen' }
-    ],
-    reviews: [
-      { name: 'Noa P.', date: 'May 2026', rating: 5, text: 'Go early morning to beat the heat and the crowds. Worth every step.' }
     ]
   }
 ];

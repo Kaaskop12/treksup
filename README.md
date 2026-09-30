@@ -73,6 +73,26 @@ Supabase dashboard. Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANO
 Add a real, verified track at `public/gpx/<route-id>.gpx` and set `gpxUrl: '/gpx/<route-id>.gpx'`
 on the route in `lib/routes.ts`. The button switches from "GPX coming soon" to a download.
 
+## Revenue funnel
+
+- **Paid guide test (TMB 2027 booking plan, EUR 29)** on `/route/tour-du-mont-blanc`. With
+  `NEXT_PUBLIC_PAYLINK_TMB_2027_PLAN` set to a *live* Stripe Payment Link the button goes to
+  checkout; without it, the click opens a "checkout opens soon" email form. Test links
+  (`buy.stripe.com/test_...`) are ignored unless `NEXT_PUBLIC_ALLOW_TEST_PAYLINKS=1`.
+- **Operator offer** at `/partners` (EUR 490 per route per season). Requests land in `partner_leads`.
+- **Funnel events** (`page_view`, `cta_click`, `form_submit`) land in `events` with UTM tags. No
+  cookies, no device storage, no user id. Link to the site with `?utm_source=email&utm_campaign=<wave>` to attribute.
+- `partner_prospects` is a private outreach tracker (not reachable through the public API).
+
+Daily read-out (Supabase SQL editor):
+
+```sql
+select * from funnel_daily where day > now() - interval '14 days' order by day desc, n desc;
+select source, count(distinct lower(email)) as people from waitlist group by 1 order by 2 desc;
+select created_at, company, email, routes from partner_leads order by created_at desc;
+select wave, status, count(*) from partner_prospects group by 1, 2 order by 1, 2;
+```
+
 ## Tests
 
 `npm test` (vitest), `npm run typecheck`.

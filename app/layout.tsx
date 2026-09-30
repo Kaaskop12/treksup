@@ -1,10 +1,14 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import BottomNav from '@/components/BottomNav';
+import Analytics from '@/components/Analytics';
+import { SITE_URL } from '@/lib/site';
 
 export const metadata: Metadata = {
-  title: 'Treksup',
-  description: 'Plan multi-day hiking adventures from start to finish.'
+  metadataBase: new URL(SITE_URL),
+  title: { default: 'Treksup: plan your first multi-day hike', template: '%s | Treksup' },
+  description: 'Plan multi-day hiking adventures from start to finish: routes, huts, transport and packing lists.',
+  openGraph: { siteName: 'Treksup', type: 'website' }
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -17,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {children}
             </div>
             <BottomNav />
+            <Analytics />
           </div>
         </div>
       </body>

@@ -5,6 +5,7 @@ import { routes } from '@/lib/routes';
 import { getFavorites, toggleFavorite } from '@/lib/storage';
 import RouteCard from '@/components/RouteCard';
 import WaitlistForm from '@/components/WaitlistForm';
+import Link from 'next/link';
 
 const filters = ['All', 'Easy', 'Moderate', 'Hard'];
 
@@ -37,7 +38,7 @@ export default function DiscoverPage() {
       <div className="px-5 pt-16 pb-5" style={{ background: 'linear-gradient(180deg,#243F2D 0%, #F7F3EA 100%)' }}>
         <p className="text-white text-[22px] font-extrabold mt-2 mb-1">Where to next?</p>
         <p className="text-white/70 text-[13px] font-medium mb-4">
-          {routes.length} curated multi-day routes to start with
+          {routes.length} curated routes to start with
         </p>
         <div className="flex items-center gap-2.5 glass rounded-full px-4 py-3">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5B6058" strokeWidth="2.2">
@@ -88,10 +89,13 @@ export default function DiscoverPage() {
           <WaitlistForm
             source="home"
             title="Be first to know"
-            blurb="GPX downloads, more routes and hut booking are coming. Get one email when they land."
+            blurb="GPX downloads and more routes are coming. Get one email when they land."
             cta="Join"
           />
         </div>
+        <Link href="/partners" className="block text-center text-[12.5px] font-bold text-forest mt-5">
+          Run walking holidays? See the operator offer →
+        </Link>
       </div>
     </div>
   );
