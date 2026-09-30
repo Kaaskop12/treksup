@@ -48,7 +48,7 @@ export default function RouteDetail({ route }: { route: Route }) {
             </svg>
           </button>
         </div>
-        <div className="absolute bottom-6 left-6 right-6 text-white">
+        <div className="absolute bottom-14 left-6 right-6 text-white">
           <span className="inline-flex items-center gap-2 glass rounded-full px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wide mb-3">
             <span className="w-1.5 h-1.5 rounded-full bg-[#8FD9B0]" /> {route.eyebrow}
           </span>
