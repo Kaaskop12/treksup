@@ -106,5 +106,55 @@ proxy blocks these sites. **Re-check each one on the live page before publishing
 - [ ] Every **[confirm]** line checked against the real plan.
 - [ ] Sources S1–S11 re-checked on the live pages (Claude can do this once treksup.com and those hosts are allowed
       in the cloud network policy, or a local session can).
-- [ ] Privacy notice and terms pages linked on the sales page.
+- [ ] Privacy notice and terms pages linked on the sales page. The terms draft is `terms.html` (fill every
+      `[OWNER: ...]`, decide every `[DECIDE]`, publish at treksup.com/terms). Checkout setup: section 7.
 - [ ] No reviews, ratings, buyer counts or "as seen in" claims until they are real.
+
+## 7. Checkout setup for the live Payment Link (legal + Stripe)
+
+Why: the law lets a buyer of instant digital content lose the 14-day withdrawal right **only** with (a) prior express
+consent to immediate access, (b) acknowledgement of losing the right, and (c) the seller's confirmation of both on a
+durable medium [L1, L2]. A checkbox alone is not enough. Stripe needs a Terms URL before it can require the checkbox,
+and advises showing the full refund policy to win disputes [L3, L4].
+
+**Stripe Dashboard (owner, live mode)**
+1. Settings > Public details:
+   - Terms of service URL = `https://treksup.com/terms`
+   - Privacy policy URL
+   - support email
+   - statement descriptor `TREKSUP` (5 to 22 characters)
+2. Settings > Checkout: turn on *Legal policies* and *Contact information*. If you keep the voluntary refund promise
+   (terms.html section 6), also turn on the refund policy: 14 days, free.
+
+**Payment Link parameters** (parameter names checked against the Stripe API, 2026-09-30)
+- `line_items`: the live EUR 29 one-time price, quantity 1.
+- `consent_collection.terms_of_service = required`.
+- `custom_text.terms_of_service_acceptance.message` (1,200 characters max):
+  > I agree to the [Terms of Sale](https://treksup.com/terms). I ask for immediate access to the plan and understand
+  > that I therefore lose my 14-day right of withdrawal.
+- `after_completion.type = redirect`, with `redirect.url` set to the public plan URL. It can include
+  `?session={CHECKOUT_SESSION_ID}`; never use localhost.
+- `invoice_creation.enabled = true`, with `invoice_data.footer`, which is the durable-medium confirmation [L1]:
+  > You asked for immediate access to this digital plan and acknowledged that you thereby lose your 14-day right of
+  > withdrawal (art. VI.53, 13° Belgian Code of Economic Law). Our refund promise in the Terms of Sale still applies.
+  - Stripe charges for post-purchase invoices. The owner decides. The alternative is to send the same text by email
+    for every sale.
+- `payment_method_types`: leave it unset so the dashboard settings decide, and make sure `bancontact` is on there
+  for Belgian buyers.
+- `metadata.project = tmb-2027`, so sales can be told apart in `ops` METRIC rows.
+
+**Open legal checks** (owner or accountant; don't guess):
+- VAT wording and whether the price includes VAT (terms.html sections 1 and 3).
+- The EU withdrawal button, required since 19 June 2026 [L5]. It applies where a right of withdrawal exists. Confirm
+  whether a valid waiver for instant access removes the need.
+- Whether you also want Dutch and French versions of the terms.
+
+| # | Claim | Source | Status |
+|---|---|---|---|
+| L1 | The withdrawal right for digital content without a physical medium ends only with consent, acknowledgement and the seller's confirmation (art. VI.53, 13° and VI.46 §7 WER) | https://trustyourwebsite.com/be/nl/guides/herroepingsknop-webshop-juni-2026 ; https://www.lawbase.be/consumentenrecht/online-aankopen | search snippets |
+| L2 | The same rule in the EU directive: art. 16(m) of Directive 2011/83, as amended by 2019/2161 | https://www.legislation.gov.uk/eudr/2019/2161/contents/data.html ; https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:52021XC1229(04) | search snippets |
+| L3 | A required terms checkbox needs a Terms URL in public details; custom acceptance text is allowed | https://docs.stripe.com/payments/checkout/custom-components | Stripe docs MCP |
+| L4 | Show the full refund and cancellation policy and require agreement to it; a link-only checkbox can fail as dispute evidence | https://docs.stripe.com/disputes/prevention/best-practices | Stripe docs MCP |
+| L5 | The withdrawal button is mandatory from 19 June 2026 for distance contracts where a withdrawal right exists (Directive 2023/2673) | https://www.lexology.com/library/detail.aspx?g=5470e596-9395-457c-abb9-66fda3693323 | search snippets |
+| L6 | Required pre-contractual information for distance sales (art. VI.45 WER) | https://economie.fgov.be/nl/themas/verkoop/contracten/precontractuele-informatie | search snippets |
+| L7 | The EU ODR platform closed on 20 July 2025, so don't link to it | https://www.twobirds.com/en/insights/2025/global/the-end-of-the-european-online-dispute-resolution-platform | search snippets |
